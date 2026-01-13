@@ -1,0 +1,9 @@
+services:
+  ads-service:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - DB_PATH=/app/data/ads.db
