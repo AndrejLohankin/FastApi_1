@@ -1,64 +1,95 @@
-@baseurl = http://0.0.0.0:8000/
+@baseurl = http://localhost:8000
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJpdmFuIiwicm9sZSI6InVzZXIiLCJleHAiOjE3Njg2NjIwNjl9.ecwBwQXgmUkazZCo1LCumwvTMI44b5jHTORugpJh7nM
 @advertisement_id = 1b707cff-dcf0-4f02-b73c-965233d9ecc6
 
+### Регистрация пользователя
+POST {{baseurl}}/user
+Content-Type: application/json
 
-### Создать объявление
+{
+  "username": "ivan",
+  "role": "user",
+  "password": "secret123"
+}
+
+### Регистрация пользователя
+POST {{baseurl}}/user
+Content-Type: application/json
+
+{
+  "username": "Ilya",
+  "role": "user",
+  "password": "secret124"
+}
+
+### 2. Вход (получение токена)
+POST {{baseurl}}/login
+Content-Type: application/json
+
+{
+  "username": "ivan",
+  "password": "secret123"
+}
+
+
+###
+
+### 3. Получить объявление по ID (без токена)
+GET {{baseurl}}/advertisement/{{advertisement_id}}
+
+###
+
+### 4. Создать объявление (с токеном)
 POST {{baseurl}}/advertisement
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
   "title": "Продам ноутбук",
-  "description": "Рабочий ноутбук, 8 ГБ ОЗУ, SSD",
-  "price": 25000,
-  "author": "Иванов И.И."
+  "description": "Рабочий ноутбук, 8 ГБ ОЗУ",
+  "price": 25000
 }
+
 ###
 
-### Создать объявление
-POST {{baseurl}}/advertisement
-Content-Type: application/json
-
-{
-  "title": "Продам телефон",
-  "description": "Рабочий телефон, 8 ГБ ОЗУ",
-  "price": 5000,
-  "author": "Белов А.А."
-}
-###
-
-### Получить объявление по ID
-GET {{baseurl}}/advertisement/{{advertisement_id}}
-###
-
-### Обновить объявление
+### 5. Обновить объявление (только своё)
 PATCH {{baseurl}}/advertisement/{{advertisement_id}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "price": 6000
+  "price": 23000
 }
+
 ###
 
-### Удалить объявление
+### 6. Удалить объявление (только своё)
 DELETE {{baseurl}}/advertisement/{{advertisement_id}}
+Authorization: Bearer {{token}}
+
 ###
 
-### Поиск объявлений (все)
-GET {{baseurl}}/advertisement
+### 7. Поиск объявлений (без токена)
+GET {{baseurl}}/advertisement?title=ноутбук&min_price=20000&max_price=30000
+
 ###
 
-### Поиск по заголовку и цене
-GET {{baseurl}}/advertisement?title=ноутбук&min_price=24000&max_price=30000
+### 8. Получить пользователя по ID (без токена)
+GET {{baseurl}}/user/{{user_id}}
+
 ###
 
-### Поиск по заголовку и цене
-GET {{baseurl}}/advertisement?title=телефон&min_price=2000&max_price=8000
+### 9. Обновить свои данные (с токеном)
+PATCH {{baseurl}}/user/{{user_id}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "username": "ivanov"
+}
+
 ###
 
-### Поиск по автору
-GET {{baseurl}}/advertisement?author=Иванов
-###
-
-### Поиск по автору
-GET {{baseurl}}/advertisement?author=Белов
-###
+### 10. Удалить себя (с токеном)
+DELETE {{baseurl}}/user/{{user_id}}
+Authorization: Bearer {{token}}
